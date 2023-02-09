@@ -1,85 +1,47 @@
-import logo from "./logo.svg";
 import "./App.css";
 import data from "./textonomy.txt";
 import { useEffect, useState } from "react";
+import { Dropdown } from "./Dropdown";
 function App() {
   const [dataArr, setDataArr] = useState([]);
-  const [firstDropDwon, setFirstDropDown] = useState([]);
-  const [secondDropDwon, setSecondDropDwon] = useState([]);
-  const [option, setOption] = useState([]);
+  let obj = {};
   useEffect(() => {
     fetch(data)
       .then((res) => res.text())
-      .then((val) => setDataArr(val.split("\n")));
-    if (dataArr.length > 0) {
-      for (let i = 0; i < dataArr.length; i++) {
-        if (!dataArr[i].includes(">")) {
-          firstDropDwon.push(dataArr[i]);
-          setFirstDropDown(firstDropDwon);
-        }
-      }
+      .then((val) => {
+        let temp = val.split("\n");
+        temp.forEach((element) => {
+          temp = element.split(" > ");
+          createdNestedObj(obj, temp);
+          setDataArr([...dataArr, obj]);
+        });
+      });
+  }, []);
+  var createdNestedObj = function DataInObj(base, name) {
+    for (let i = 0; i < name.length; i++) {
+      base = base[name[i]] = base[name[i]] || {};
     }
-  }, [dataArr.length]);
-
-  var inObj = {};
-  const MainCategoryChangeHandler = (e) => {
-    let tempArr = [];
-    let temp2Arr = [];
-    for (let i = 0; i < dataArr.length; i++) {
-      if (dataArr[i].startsWith(e.target.value)) {
-        tempArr.push(dataArr[i]);
-      }
-    }
-    tempArr.map((val) => val.split(" > ").map((item) => temp2Arr.push(item)));
-    console.log(temp2Arr);
-    // for (let i = 0; i < tempArr.length; i++) {
-    //   let temp = tempArr[i].split(">");
-    //   temp2Arr.push(temp);
-    // }
-    // console.log(temp2Arr);
   };
-
-  // console.log(secondDropDwon.slice(1, 1));
-  // let temp = [];
-  // for (let i = 0; i < secondDropDwon.length; i++) {
-  //   console.log(secondDropDwon[i]);
-
-  // }
-  // let d = secondDropDwon
-  //   .map(JSON.stringify)
-  //   .filter((e, i, a) => i === a.indexOf(e))
-  //   .map(JSON.parse);
-  // console.log(d);
-  // for (let i = 0; i < d.length; i++) {
-  //   let temp = d.splice(i, 1);
-  //   console.log(temp);
-  // }
+  const handler = (obj, value, index) => {
+    if (JSON.stringify(Object.keys(dataArr)).includes(parseInt(index + 1))) {
+      dataArr.splice(index + 1, dataArr.length - 1, obj[value]);
+      setDataArr([...dataArr]);
+    } else {
+      setDataArr([...dataArr, obj[value]]);
+    }
+  };
   return (
     <div className="App">
-      <select
-        name=""
-        id=""
-        class="form-select w-25 mx-5"
-        onChange={MainCategoryChangeHandler}
-      >
-        <option value="">---select---</option>
-        {firstDropDwon.map((val) => (
-          <option value={val}>{val}</option>
-        ))}
-      </select>
-      <select
-        name=""
-        id=""
-        class="form-select w-25 mx-5"
-        onChange={MainCategoryChangeHandler}
-      >
-        <option value="">---select---</option>
-        {/* {secondDropDwon.map((val) => (
-          <option value={val}>{val}</option>
-        ))} */}
-      </select>
+      <h2>Taxonomy</h2>
+      {dataArr.length > 0 ? (
+        <>
+          {" "}
+          {dataArr.map((obj, index) => (
+            <Dropdown obj={obj} handler={handler} />
+          ))}
+        </>
+      ) : null}
     </div>
   );
 }
-
 export default App;
