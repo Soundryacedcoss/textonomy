@@ -1,5 +1,5 @@
 import React from "react";
-export const Dropdown = ({ handler, obj }) => {
+export const Dropdown = ({ handler, obj, index }) => {
   return (
     <>
       {Object.keys(obj).length !== 0 ? (
@@ -7,17 +7,18 @@ export const Dropdown = ({ handler, obj }) => {
           <select
             name=""
             id=""
-            class="form-select w-100 mx-5"
-            onChange={(e) => handler(obj, e.target.value)}
+            className="form-select w-100 mx-5"
+            onChange={(e) => handler(obj, e.target.value, index)}
           >
             <option value="" disabled selected>
               Select
             </option>
             {Object.keys(obj).map((item) => (
-              <option value={item}>{item}</option>
+              <option value={item} key={Math.random()}>
+                {item}
+              </option>
             ))}
           </select>
-         
         </div>
       ) : (
         " "

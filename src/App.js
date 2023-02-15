@@ -23,7 +23,7 @@ function App() {
     }
   };
   const handler = (obj, value, index) => {
-    if (JSON.stringify(Object.keys(dataArr)).includes(parseInt(index + 1))) {
+    if (JSON.stringify(Object.keys(dataArr)).includes(index + 1)) {
       dataArr.splice(index + 1, dataArr.length - 1, obj[value]);
       setDataArr([...dataArr]);
     } else {
@@ -37,7 +37,7 @@ function App() {
         <>
           {" "}
           {dataArr.map((obj, index) => (
-            <Dropdown obj={obj} handler={handler} />
+            <Dropdown obj={obj} handler={handler} index={index} key={index} />
           ))}
         </>
       ) : null}
