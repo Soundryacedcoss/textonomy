@@ -2,27 +2,30 @@ import React from "react";
 export const Dropdown = ({ handler, obj, index }) => {
   return (
     <>
-      {Object.keys(obj).length !== 0 ? (
-        <div className="Dropdown_container">
+      <div>
+      <div className="Dropdown_container">
+        {/* Check Validation */}
+        {Object.keys(obj).length !== 0 ? (
           <select
-            name=""
-            id=""
-            className="form-select w-100 mx-5"
-            onChange={(e) => handler(obj, e.target.value, index)}
+            onChange={(e) => {
+              handler(obj, e.target.value, index);
+            }}
+            className="form-select mt-3"
+            aria-label="Default select example"
           >
-            <option value="" disabled selected>
-              Select
+            <option disabled selected>
+              --Select--
             </option>
-            {Object.keys(obj).map((item) => (
-              <option value={item} key={Math.random()}>
-                {item}
+            {/* Map */}
+            {Object.keys(obj).map((val, index) => (
+              <option key={index} value={val}>
+                {val}
               </option>
             ))}
           </select>
-        </div>
-      ) : (
-        " "
-      )}
+        ) : null}
+      </div>
+    </div>
     </>
   );
 };
